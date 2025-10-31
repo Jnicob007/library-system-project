@@ -1,64 +1,65 @@
 import java.sql.Date;
+import java.time.LocalDate;
 
-public class BookObj {
+public class BookObj implements Publication {
     private int id;
     private String title;
-    private float price;
+    private String genre;
     private Date releaseDate;
     private int authorID;
     private int publisherID;
     private int quantityInStock;
-    private boolean isOnDiscount;
-    private int discount;
+    private String language;
+    private int pagesAmmount;
 
-    public BookObj(int id, String title, float price, Date releaseDate, int authorID, int publisherID, int quantityInStock, boolean isOnDiscount, int discount) {
+    public BookObj(int id, String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) {
         this.id = id;
         this.title = title;
-        if(isOnDiscount){
-            this.price = price - (price * discount);
-        }
-        else{
-            this.price = price;
-        }
+        this.genre = genre;
         this.releaseDate = releaseDate;
         this.authorID = authorID;
         this.publisherID = publisherID;
         this.quantityInStock = quantityInStock;
-        this.isOnDiscount = isOnDiscount;
-        this.discount = discount;
+        this.language = language;
+        this.pagesAmmount = pagesAmmount;
     }
 
-    public BookObj(String title, float price, Date releaseDate, int authorID, int publisherID, int quantityInStock, boolean isOnDiscount, int discount) {
-        this.id = 0;
-        this.title = title;
-        if(isOnDiscount){
-            this.price = price - (price * discount);
-        }
-        else{
-            this.price = price;
-        }
-        this.releaseDate = releaseDate;
-        this.authorID = authorID;
-        this.publisherID = publisherID;
-        this.quantityInStock = quantityInStock;
-        this.isOnDiscount = isOnDiscount;
-        this.discount = discount;
+    public BookObj(String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) {
+        this(0, title, genre, releaseDate, authorID, publisherID, quantityInStock, language, pagesAmmount);
     }
+
+    public BookObj(){
+        this(0,"","", Date.valueOf(LocalDate.now()),0,0,0, "", 0);
+    }
+
+//    @Override
+//    public String toString() {
+//        StringBuilder book = new StringBuilder("Book nr. " + id +
+//                "\n Title: " + title +
+//                "\n Price: " + price +
+//                "\n Release date: " + releaseDate +
+//                "\n Author ID: " + authorID +
+//                "\n Publisher ID: " + publisherID +
+//                "\n Quantity in stock: " + quantityInStock +
+//                "\n Is on discount: " + isOnDiscount);
+//        if(isOnDiscount){
+//            book.append("\n Discount: " + discount);
+//        }
+//        return book.toString();
+//    }
 
     @Override
-    public String toString() {
+    public void displayInfo() {
         StringBuilder book = new StringBuilder("Book nr. " + id +
                 "\n Title: " + title +
-                "\n Price: " + price +
+                "\n Genre: " + genre +
                 "\n Release date: " + releaseDate +
                 "\n Author ID: " + authorID +
                 "\n Publisher ID: " + publisherID +
                 "\n Quantity in stock: " + quantityInStock +
-                "\n Is on discount: " + isOnDiscount);
-        if(isOnDiscount){
-            book.append("\n Discount: " + discount);
-        }
-        return book.toString();
+                "\n Language: " + language +
+                "\n Pages ammount: " + pagesAmmount);
+        System.out.println(book);
     }
 
     public int getId() {
@@ -69,8 +70,8 @@ public class BookObj {
         return title;
     }
 
-    public float getPrice() {
-        return price;
+    public String getGenre() {
+        return genre;
     }
 
     public Date getReleaseDate() {
@@ -89,12 +90,12 @@ public class BookObj {
         return quantityInStock;
     }
 
-    public boolean getIsOnDiscount() {
-        return isOnDiscount;
+    public String getLanguage() {
+        return language;
     }
 
-    public int getDiscount() {
-        return discount;
+    public int getPagesAmmount() {
+        return pagesAmmount;
     }
 }
 

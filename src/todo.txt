@@ -1,0 +1,6 @@
+Adam:
+enum (polecam genre z książki i audiobook oraz topic z magazine (tematyka czasopisma))
+Wyjątek
+Comparator
+Testowanie
+Menu w main
