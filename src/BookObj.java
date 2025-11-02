@@ -1,7 +1,7 @@
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class BookObj implements Publication {
+public class BookObj implements Publication { // klasa BookObj implementująca interfejs do obiektów
     private int id;
     private String title;
     private String genre;
@@ -32,24 +32,8 @@ public class BookObj implements Publication {
         this(0,"","", Date.valueOf(LocalDate.now()),0,0,0, "", 0);
     }
 
-//    @Override
-//    public String toString() {
-//        StringBuilder book = new StringBuilder("Book nr. " + id +
-//                "\n Title: " + title +
-//                "\n Price: " + price +
-//                "\n Release date: " + releaseDate +
-//                "\n Author ID: " + authorID +
-//                "\n Publisher ID: " + publisherID +
-//                "\n Quantity in stock: " + quantityInStock +
-//                "\n Is on discount: " + isOnDiscount);
-//        if(isOnDiscount){
-//            book.append("\n Discount: " + discount);
-//        }
-//        return book.toString();
-//    }
-
     @Override
-    public void displayInfo() {
+    public void displayInfo() { // metoda wyświetlająca informacje o książce / wyświetlająca obiekt
         StringBuilder book = new StringBuilder("Book nr. " + id +
                 "\n Title: " + title +
                 "\n Genre: " + genre +

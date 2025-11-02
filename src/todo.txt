@@ -3,4 +3,4 @@ enum (polecam genre z książki i audiobook oraz topic z magazine (tematyka czas
 Wyjątek
 Comparator
 Testowanie
-Menu w main
+Menu ze switch case w mainie

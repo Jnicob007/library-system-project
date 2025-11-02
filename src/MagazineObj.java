@@ -1,7 +1,7 @@
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class MagazineObj implements Publication {
+public class MagazineObj implements Publication { // klasa MagazineObj implementuje interfejs do obiektów
     private int id;
     private String title;
     private String topic;
@@ -21,13 +21,6 @@ public class MagazineObj implements Publication {
     }
 
     public MagazineObj(String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount) {
-//        this.id = id;
-//        this.title = title;
-//        this.topic = topic;
-//        this.releaseDate = releaseDate;
-//        this.publisherID = publisherID;
-//        this.quantityInStock = quantityInStock;
-//        this.articlesAmmount = articlesAmmount;
         this(0, title, topic, releaseDate, publisherID, quantityInStock, articlesAmmount);
     }
 
@@ -36,7 +29,7 @@ public class MagazineObj implements Publication {
     }
 
     @Override
-    public void displayInfo() {
+    public void displayInfo() { // metoda wyświetlająca dane czasopisma / wyświetlająca obiekt
         StringBuilder book = new StringBuilder("Mazagine nr. " + id +
                 "\n Title: " + title +
                 "\n Topic: " + topic +

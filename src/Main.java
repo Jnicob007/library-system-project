@@ -5,94 +5,24 @@ import java.util.Scanner;
 
 public class Main{
     public static void main() {
-        DBConnection.initDatabase();
+        DBConnection.initDatabase(); // inicjacja połączenia z bazą
 
+        // tworzenie skanera, zmiennej interfejsów
         Scanner keyboard = new Scanner(System.in);
         GUIFactory factory;
+        Publication p;
+        PublicationDB pDB;
 
-
+        // aby obsłużyć program, do interfejsu z fabryką przypisujemy odpowiednią fabrykę, np. AudiobookFactory
+        // następnie do zmiennych p oraz pDB przypisujemy odpowiedni obiekt publikacji oraz obiekt do obslugi operacji na bazie danych
+        // program sam wykrywa odpowiednie typy obiektów przez wczesniejsze przypisanie odpowiedniej fabryki do zmiennej factory
         factory = new AudiobookFactory();
-        Publication p = factory.createPublication();
-        PublicationDB pDB = factory.createPublicationDB();
+        p = factory.createPublication();
+        pDB = factory.createPublicationDB();
         p.displayInfo();
+        pDB.addPublication(p);
+        pDB.deletePublication(3);
 
-
-        if(pDB instanceof AudiobookDB && p instanceof AudiobookObj){
-            pDB.returnPublication(3,3);
-            pDB.returnPublication(2,1);
-        }
-
-
-
-//        BookDB bookDB = new BookDB();
-//        bookDB.createTable();
-
-//        while(true){
-//            System.out.println("Menu" +
-//                    "\n 1. Add book" +
-//                    "\n 2. Display all books" +
-//                    "\n 3. Update price of specific book" +
-//                    "\n 4. Delete book" +
-//                    "\n 0. Shut down" +
-//                    "\n Choice: ");
-//
-//            int choice = keyboard.nextInt();
-//            keyboard.nextLine();
-//
-//            switch (choice){
-//                case 0 -> {
-//                    System.out.println("Thanks for using our program");
-//                    return;
-//                }
-//                case 1 -> {
-//                    System.out.println("Title: ");
-//                    String title = keyboard.nextLine();
-//                    System.out.println("Price: ");
-//                    float price = keyboard.nextFloat();
-//                    System.out.println("Release date: ");
-//                    keyboard.nextLine();
-//                    Date releaseDate = Date.valueOf(keyboard.nextLine());
-//                    System.out.println("Author ID: ");
-//                    int authorID = keyboard.nextInt();
-//                    System.out.println("Publisher ID: ");
-//                    int publisherID = keyboard.nextInt();
-//                    System.out.println("Quantity in stock: ");
-//                    int quantityInStock = keyboard.nextInt();
-//                    System.out.println("Is on discount: ");
-//                    boolean isOnDiscount = keyboard.nextBoolean();
-//                    int discount = 0;
-//                    if(isOnDiscount) {
-//                        System.out.println("Discount: ");
-//                        discount = keyboard.nextInt();
-//                    }
-//                    BookObj newBook = new BookObj(title, price, releaseDate, authorID, publisherID, quantityInStock, isOnDiscount, discount);
-//                    bookDB.addBook(newBook);
-//                }
-//                case 2 -> {
-//                    ArrayList<BookObj> books = bookDB.getAllBooks();
-//                    if(books.isEmpty()){
-//                        System.out.println("No books to display");
-//                    }
-//                    else{
-//                        for(BookObj b : books){
-//                            System.out.println(b);
-//                        }
-//                    }
-//                }
-//                case 3 ->{
-//                    System.out.println("Input book's ID: ");
-//                    int bookID = keyboard.nextInt();
-//                    System.out.println("New price: ");
-//                    float newPrice = keyboard.nextFloat();
-//                    bookDB.updateBooksPrice(bookID, newPrice);
-//                }
-//                case 4 -> {
-//                    System.out.println("Input book's ID: ");
-//                    int bookID = keyboard.nextInt();
-//                    bookDB.deleteBook(bookID);
-//                }
-//                default -> System.out.println("Invalid value inputed!");
-//            }
-//        }
+        // tutaj menu jakies ze switchem
     }
 }

@@ -5,9 +5,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AudiobookDB implements PublicationDB<AudiobookObj> {
+public class AudiobookDB implements PublicationDB<AudiobookObj> { // audiobookDB implementuje Interfejs do baz danych dla audiobooków
     @Override
-    public void createTable(){
+    public void createTable(){ // metoda co tworzy tabele
         String sql = "CREATE TABLE IF NOT EXISTS audiobooks(" +
                 "audiobook_ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
                 "title varchar(100) NOT NULL," +
@@ -30,7 +30,7 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
     }
 
     @Override
-    public void addPublication(AudiobookObj audiobook){
+    public void addPublication(AudiobookObj audiobook){ // metoda dodająca audiobook
 
         String sql = "INSERT INTO audiobooks (title, genre, release_date, author_ID, publisher_ID, quantity_in_stock, recording_length, available_languages_ammount)" +
                 "VALUES(?,?,?,?,?,?,?,?)";
@@ -53,7 +53,7 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
     }
 
     @Override
-    public ArrayList<AudiobookObj> getAllPublications(){
+    public ArrayList<AudiobookObj> getAllPublications(){ // metoda zwracająca wszystkie audiobooki z tabeli
         ArrayList<AudiobookObj> audiobooks = new ArrayList<>();
         String sql = "SELECT * FROM audiobooks";
 
@@ -80,7 +80,7 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
         return audiobooks;
     }
 
-    public void rentPublication(int publicationID, int userID){
+    public void rentPublication(int publicationID, int userID){ // metoda wypożyczająca dany audiobook (po publicationID) przez danego użytkownika (po userID)
         String sql0 = "SELECT * FROM users WHERE user_ID = ?;";
         String sql1 = "UPDATE audiobooks SET quantity_in_stock = quantity_in_stock - 1 WHERE audiobook_ID = ?;";
         String sql2 = "INSERT INTO rented_publications (publication_ID, user_ID, publication_type) VALUES (?,?,?);";
@@ -100,6 +100,12 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
             ps4.setInt(2, userID);
             ps4.setString(3, "audiobook");
 
+            // tutaj zrobiłem trochę walidacji typu:
+            // nie ma audiobooka o podanym ID,
+            // nie ma usera o podanym ID,
+            // dany audiobook ma quantity_in_stock równe 0,
+            // podczas wypożyczania użytkownik podał złe hasło do konta (kolumna password w tabeli users),
+            // dany użytkownik już wypożyczył dany audiobook
             try(ResultSet rsUser = ps0.executeQuery();
                 ResultSet rsAudiobook = ps3.executeQuery();
                 ResultSet rsRented = ps4.executeQuery()){
@@ -141,7 +147,7 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
         }
     }
 
-    public void returnPublication(int publicationID, int userID){
+    public void returnPublication(int publicationID, int userID){ // metoda zwracająca dany audiobook (po publicationID) przez danego użytkownika (po userID)
         String sql0 = "SELECT * FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql1 = "DELETE FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql2 = "UPDATE audiobooks SET quantity_in_stock = quantity_in_stock + 1 WHERE audiobook_ID = ?";
@@ -154,6 +160,8 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
             ps0.setInt(2, userID);
             ps0.setString(3, "audiobook");
 
+            // noi tutaj też trochę walidacji:
+            // dany użytkownik nie wypożyczył danego audiobooka
             try(ResultSet rsRented = ps0.executeQuery()){
                 if(!rsRented.next()){
                     System.out.println("Given user has not rented given audiobook.");
@@ -175,7 +183,7 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> {
     }
 
     @Override
-    public void deletePublication(int audiobookID){
+    public void deletePublication(int audiobookID){ // metoda usuwająca dany audiobook z tabeli (po audiobookID)
         String sql = "DELETE FROM audiobooks WHERE audiobook_ID = ?";
 
         try(Connection conn = DBConnection.getConnection();

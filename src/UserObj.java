@@ -1,4 +1,8 @@
-public class UserObj {
+public class UserObj { // klasa użytkownika, ma pola konstruktory i gettery
+
+    // ta klasa nie implementuje interfejsu Publication, bo użytkownik nie jest publikacją (tj. produktem w bibliotece)
+    // tutaj ta implementacja nie ma sensu, tak samo nie tworzę klasy UserFactory
+
     private int id;
     private String username;
     private String email;

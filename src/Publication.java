@@ -5,4 +5,5 @@ public interface Publication {
 }
 
 // Glowny interfejs
-// Z niego dziedziczy: BookObj, MagazineObj, AudioBookObj
+// Implementują go: BookObj, MagazineObj, AudioBookObj
+// zawiera metode displayInfo(), która będzie Override'owana przez powyższe obiekty, gdzie będzie służyła do wyświetlania wszystkich pól obiektu

@@ -5,9 +5,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class BookDB implements PublicationDB<BookObj> {
+public class BookDB implements PublicationDB<BookObj> { // klasa BookDB rozszerzająca interfejs do baz danych dla obiektów BookObj
     @Override
-    public void createTable(){
+    public void createTable(){ // metoda tworząca tabele
         String sql = "CREATE TABLE IF NOT EXISTS books(" +
                 "book_ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
                 "title varchar(100) NOT NULL," +
@@ -30,7 +30,7 @@ public class BookDB implements PublicationDB<BookObj> {
     }
 
     @Override
-    public void addPublication(BookObj book){
+    public void addPublication(BookObj book){ // metoda dodająca nową książkę do tabeli
         String sql = "INSERT INTO books (title, genre, release_date, author_ID, publisher_ID, quantity_in_stock, language, pages_ammount)" +
                 "VALUES(?,?,?,?,?,?,?,?)";
 
@@ -52,7 +52,7 @@ public class BookDB implements PublicationDB<BookObj> {
     }
 
     @Override
-    public ArrayList<BookObj> getAllPublications(){
+    public ArrayList<BookObj> getAllPublications(){ // metoda zwracająca wszystkie książki z tabeli
         ArrayList<BookObj> books = new ArrayList<>();
         String sql = "SELECT * FROM books";
 
@@ -85,7 +85,7 @@ public class BookDB implements PublicationDB<BookObj> {
     }
 
     @Override
-    public void rentPublication(int publicationID, int userID){
+    public void rentPublication(int publicationID, int userID){ // metoda wypożyczająca daną książkę (po publicationID) przez danego użytkownika (userID)
         String sql0 = "SELECT * FROM users WHERE user_ID = ?;";
         String sql1 = "UPDATE books SET quantity_in_stock = quantity_in_stock - 1 WHERE book_ID = ?;";
         String sql2 = "INSERT INTO rented_publications (publication_ID, user_ID, publication_type) VALUES (?,?,?);";
@@ -104,6 +104,12 @@ public class BookDB implements PublicationDB<BookObj> {
             ps4.setInt(2, userID);
             ps4.setString(3, "book");
 
+            // tutaj zrobiłem trochę walidacji typu:
+            // nie ma książki o podanym ID,
+            // nie ma usera o podanym ID,
+            // dana książka ma quantity_in_stock równe 0,
+            // podczas wypożyczania użytkownik podał złe hasło do konta (kolumna password w tabeli users),
+            // dany użytkownik już wypożyczył daną książkę
             try(ResultSet rsUser = ps0.executeQuery();
             ResultSet rsBook = ps3.executeQuery();
             ResultSet rsRented = ps4.executeQuery()){
@@ -147,7 +153,7 @@ public class BookDB implements PublicationDB<BookObj> {
     }
 
     @Override
-    public void returnPublication(int publicationID, int userID){
+    public void returnPublication(int publicationID, int userID){ // metoda zwracająca daną książkę (po publicationID) przez danego użytkownika (po userID)
         String sql0 = "SELECT * FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql1 = "DELETE FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql2 = "UPDATE books SET quantity_in_stock = quantity_in_stock + 1 WHERE book_ID = ?";
@@ -160,6 +166,8 @@ public class BookDB implements PublicationDB<BookObj> {
             ps0.setInt(2, userID);
             ps0.setString(3, "book");
 
+            // noi tutaj też trochę walidacji:
+            // dany użytkownik nie wypożyczył danej książki
             try(ResultSet rsRented = ps0.executeQuery()){
                 if(!rsRented.next()){
                     System.out.println("Given user has not rented given book.");
@@ -181,7 +189,7 @@ public class BookDB implements PublicationDB<BookObj> {
     }
 
     @Override
-    public void deletePublication(int bookID){
+    public void deletePublication(int bookID){ // metoda usuwająca daną książkę z tabeli (po publicationID)
         String sql = "DELETE FROM books WHERE book_ID = ?";
 
         try(Connection conn = DBConnection.getConnection();

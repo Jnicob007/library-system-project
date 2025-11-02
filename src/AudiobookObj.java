@@ -1,7 +1,7 @@
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class AudiobookObj implements Publication {
+public class AudiobookObj implements Publication { // audiobook rozszerzające interfejs do obiektów
     private int id;
     private String title;
     private String genre;
@@ -33,7 +33,7 @@ public class AudiobookObj implements Publication {
     }
 
     @Override
-    public void displayInfo() {
+    public void displayInfo() { // metoda do wyświetlania informacji / wyświetlająca obiekt
         StringBuilder audiobook = new StringBuilder("Mazagine nr. " + id +
                 "\n Title: " + title +
                 "\n Genre: " + genre +

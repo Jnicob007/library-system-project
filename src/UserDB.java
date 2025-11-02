@@ -4,9 +4,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class UserDB {
+public class UserDB { // klasa użytkownika do obsługi operacji na bazie danych
 
-    public void createTable(){
+    // ta klasa nie implementuje interfejsu PublicationDB, bo użytkownik nie jest publikacją (tj. produktem w bibliotece)
+    // tutaj ta implementacja nie ma sensu, tak samo nie tworzę klasy UserFactory
+
+    public void createTable(){ // tworzenie tabeli
         String sql = "CREATE TABLE IF NOT EXISTS users(" +
                 "user_ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
                 "username varchar(100) NOT NULL," +
@@ -23,7 +26,7 @@ public class UserDB {
         }
     }
 
-    public void addUser(UserObj user){
+    public void addUser(UserObj user){ // dodawanie użytkownika do tabeli
         String sql = "INSERT INTO users (username, email, password)" +
                 "VALUES(?,?,?)";
 
@@ -39,7 +42,34 @@ public class UserDB {
         }
     }
 
-    public void deleteUser(int userID){
+    ArrayList<UserObj> getAllUsers(){ // zwracanie wszystkich użytkowników z tabeli
+        ArrayList<UserObj> users = new ArrayList<>();
+        String sql = "SELECT * FROM users;";
+
+        try(Connection conn = DBConnection.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql)){
+            if(!rs.next()){
+                System.out.println("No users to display.");
+            }
+            else{
+                while(rs.next()){
+                    UserObj newUser = new UserObj(
+                            rs.getInt("user_ID"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    );
+                    users.add(newUser);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return users;
+    }
+
+    public void deleteUser(int userID){ // usuwanie danego użytkownika z tabeli po ID
         String sql = "DELETE FROM users WHERE user_ID = ?";
 
         try(Connection conn = DBConnection.getConnection();

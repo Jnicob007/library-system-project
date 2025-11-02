@@ -5,9 +5,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MagazineDB implements PublicationDB<MagazineObj> {
+public class MagazineDB implements PublicationDB<MagazineObj> { // klasa MagazineDB implementująca interfejs do baz danych dla obiektów MagazineObj
     @Override
-    public void createTable(){
+    public void createTable(){ // metoda tworząca tabelę
         String sql = "CREATE TABLE IF NOT EXISTS magazines(" +
                 "book_ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL," +
                 "title varchar(100) NOT NULL," +
@@ -28,7 +28,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
     }
 
     @Override
-    public void addPublication(MagazineObj magazine){
+    public void addPublication(MagazineObj magazine){ // metoda dodająca nowe czasopismo do bazy
         String sql = "INSERT INTO magazines (title, topic, release_date, publisher_ID, quantity_in_stock, articles_ammount)" +
                 "VALUES(?,?,?,?,?,?)";
 
@@ -48,7 +48,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
     }
 
     @Override
-    public ArrayList<MagazineObj> getAllPublications(){
+    public ArrayList<MagazineObj> getAllPublications(){ // metoda zwracająca wszystkie czasopisma z tabeli
         ArrayList<MagazineObj> magazines = new ArrayList<>();
         String sql = "SELECT * FROM magazines";
 
@@ -78,7 +78,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
         return magazines;
     }
 
-    public void rentPublication(int publicationID, int userID){
+    public void rentPublication(int publicationID, int userID){ // metoda wypożyczająca dane czasopismo (po publicationID) przez danego użytkownika (po userID)
         String sql0 = "SELECT * FROM users WHERE user_ID = ?;";
         String sql1 = "UPDATE magazines SET quantity_in_stock = quantity_in_stock - 1 WHERE magazine_ID = ?;";
         String sql2 = "INSERT INTO rented_publications (publication_ID, user_ID, publication_type) VALUES (?,?,?);";
@@ -98,6 +98,12 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
             ps4.setInt(2, userID);
             ps4.setString(3, "magazine");
 
+            // tutaj zrobiłem trochę walidacji typu:
+            // nie ma czasopisma o podanym ID,
+            // nie ma usera o podanym ID,
+            // dane czasopismo ma quantity_in_stock równe 0,
+            // podczas wypożyczania użytkownik podał złe hasło do konta (kolumna password w tabeli users),
+            // dany użytkownik już wypożyczył dane czasopismo
             try(ResultSet rsUser = ps0.executeQuery();
                 ResultSet rsMagazine = ps3.executeQuery();
                 ResultSet rsRented = ps4.executeQuery()){
@@ -139,7 +145,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
         }
     }
 
-    public void returnPublication(int publicationID, int userID){
+    public void returnPublication(int publicationID, int userID){ // metoda zwracająca dane czasopismo (po publicationID) przez danego użytkownika (po userID)
         String sql0 = "SELECT * FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql1 = "DELETE FROM rented_publications WHERE publication_ID = ? AND user_ID = ? AND publication_type = ?;";
         String sql2 = "UPDATE magazines SET quantity_in_stock = quantity_in_stock + 1 WHERE magazine_ID = ?";
@@ -152,6 +158,8 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
             ps0.setInt(2, userID);
             ps0.setString(3, "magazine");
 
+            // noi tutaj też trochę walidacji:
+            // użytkownik nie wypożyczył danego czasopisma
             try(ResultSet rsRented = ps0.executeQuery()){
                 if(!rsRented.next()){
                     System.out.println("Given user has not rented given magazine.");
@@ -173,7 +181,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> {
     }
 
     @Override
-    public void deletePublication(int magazineID){
+    public void deletePublication(int magazineID){ // metoda usuwająca dane czasopismo (po publicationID)
         String sql = "DELETE FROM magazines WHERE magazine_ID = ?";
 
         try(Connection conn = DBConnection.getConnection();
