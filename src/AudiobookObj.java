@@ -32,6 +32,9 @@ public class AudiobookObj implements Publication { // audiobook rozszerzające i
         this(0, "", "", Date.valueOf(LocalDate.now()), 0, 0, 0, "00:00:00", 0);
     }
 
+    public AudiobookObj(String audioTitle, String audioAuthor, int duration) {
+    }
+
     @Override
     public void displayInfo() { // metoda do wyświetlania informacji / wyświetlająca obiekt
         StringBuilder audiobook = new StringBuilder("Mazagine nr. " + id +

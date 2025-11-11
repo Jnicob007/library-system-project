@@ -1,7 +1,16 @@
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class MagazineObj implements Publication { // klasa MagazineObj implementuje interfejs do obiektów
+public class MagazineObj implements Publication {
+
+    public enum Topic {
+        TECHNOLOGY,
+        HEALTH,
+        TRAVEL,
+        BUSINESS,
+        LIFESTYLE
+    }
+
     private int id;
     private String title;
     private String topic;
@@ -10,7 +19,15 @@ public class MagazineObj implements Publication { // klasa MagazineObj implement
     private int quantityInStock;
     private int articlesAmmount;
 
-    public MagazineObj(int id, String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount) {
+    // Konstruktor z walidacją
+    public MagazineObj(int id, String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
+            throws InvalidPublicationException {
+        // Walidacja danych wejściowych
+        InvalidPublicationException.validateString("Title", title);
+        InvalidPublicationException.validateString("Topic", topic);
+        InvalidPublicationException.validatePositive("Quantity in stock", quantityInStock);
+        InvalidPublicationException.validatePositive("Articles amount", articlesAmmount);
+
         this.id = id;
         this.title = title;
         this.topic = topic;
@@ -20,51 +37,33 @@ public class MagazineObj implements Publication { // klasa MagazineObj implement
         this.articlesAmmount = articlesAmmount;
     }
 
-    public MagazineObj(String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount) {
+    public MagazineObj(String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
+            throws InvalidPublicationException {
         this(0, title, topic, releaseDate, publisherID, quantityInStock, articlesAmmount);
     }
 
-    public MagazineObj(){
-        this(0,"", "", Date.valueOf(LocalDate.now()), 0, 0, 0);
+    public MagazineObj() throws InvalidPublicationException {
+        this(0, "", "", Date.valueOf(LocalDate.now()), 0, 0, 0);
     }
 
     @Override
-    public void displayInfo() { // metoda wyświetlająca dane czasopisma / wyświetlająca obiekt
-        StringBuilder book = new StringBuilder("Mazagine nr. " + id +
+    public void displayInfo() {
+        StringBuilder book = new StringBuilder("Magazine nr. " + id +
                 "\n Title: " + title +
                 "\n Topic: " + topic +
                 "\n Release date: " + releaseDate +
                 "\n Publisher ID: " + publisherID +
                 "\n Quantity in stock: " + quantityInStock +
-                "\n Articles ammount: " + articlesAmmount);
+                "\n Articles amount: " + articlesAmmount);
         System.out.println(book);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public int getPublisherID() {
-        return publisherID;
-    }
-
-    public int getQuantityInStock() {
-        return quantityInStock;
-    }
-
-    public int getArticlesAmmount() {
-        return articlesAmmount;
-    }
+    // Getters
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getTopic() { return topic; }
+    public Date getReleaseDate() { return releaseDate; }
+    public int getPublisherID() { return publisherID; }
+    public int getQuantityInStock() { return quantityInStock; }
+    public int getArticlesAmmount() { return articlesAmmount; }
 }

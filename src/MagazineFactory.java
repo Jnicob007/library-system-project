@@ -1,6 +1,6 @@
 public class MagazineFactory implements GUIFactory { // klasa MagazineFactory implementuje interfejs do fabryk
     @Override
-    public Publication createPublication() { // metoda zwracająca nowy obiekt MagazineObj
+    public Publication createPublication() throws InvalidPublicationException { // metoda zwracająca nowy obiekt MagazineObj
         return new MagazineObj();
     }
 

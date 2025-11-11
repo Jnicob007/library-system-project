@@ -1,6 +1,6 @@
 Adam:
-enum (polecam genre z książki i audiobook oraz topic z magazine (tematyka czasopisma))
-Wyjątek
-Comparator
-Testowanie
+X enum (polecam genre z książki i audiobook oraz topic z magazine (tematyka czasopisma))
+X Wyjątek
+X Comparator
+X Testowanie
 Menu ze switch case w mainie

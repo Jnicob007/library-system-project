@@ -1,7 +1,10 @@
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
 
-public class BookObj implements Publication { // klasa BookObj implementująca interfejs do obiektów
+public class BookObj implements Publication {
+    public static HashMap<Object, Object> Genre; // klasa BookObj implementująca interfejs do obiektów
     private int id;
     private String title;
     private String genre;
@@ -28,7 +31,7 @@ public class BookObj implements Publication { // klasa BookObj implementująca i
         this(0, title, genre, releaseDate, authorID, publisherID, quantityInStock, language, pagesAmmount);
     }
 
-    public BookObj(){
+    public BookObj(String bookTitle, String author, int pages, Date releaseDate){
         this(0,"","", Date.valueOf(LocalDate.now()),0,0,0, "", 0);
     }
 
@@ -46,41 +49,38 @@ public class BookObj implements Publication { // klasa BookObj implementująca i
         System.out.println(book);
     }
 
-    public int getId() {
-        return id;
+    // Gettery
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getGenre() { return genre; }
+    public Date getReleaseDate() { return releaseDate; }
+    public int getAuthorID() { return authorID; }
+    public int getPublisherID() { return publisherID; }
+    public int getQuantityInStock() { return quantityInStock; }
+    public String getLanguage() { return language; }
+    public int getPagesAmmount() { return pagesAmmount; }
+
+    // Sortowanie po tytule (A–Z)
+    public static class TitleComparator implements Comparator<BookObj> {
+        @Override
+        public int compare(BookObj b1, BookObj b2) {
+            return b1.getTitle().compareToIgnoreCase(b2.getTitle());
+        }
     }
 
-    public String getTitle() {
-        return title;
+    // Sortowanie po dacie wydania (od najstarszej do najnowszej)
+    public static class ReleaseDateComparator implements Comparator<BookObj> {
+        @Override
+        public int compare(BookObj b1, BookObj b2) {
+            return b1.getReleaseDate().compareTo(b2.getReleaseDate());
+        }
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public int getAuthorID() {
-        return authorID;
-    }
-
-    public int getPublisherID() {
-        return publisherID;
-    }
-
-    public int getQuantityInStock() {
-        return quantityInStock;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public int getPagesAmmount() {
-        return pagesAmmount;
+    // Sortowanie po liczbie stron (od najmniejszej do największej)
+    public static class PagesAmountComparator implements Comparator<BookObj> {
+        @Override
+        public int compare(BookObj b1, BookObj b2) {
+            return Integer.compare(b1.getPagesAmmount(), b2.getPagesAmmount());
+        }
     }
 }
-
-

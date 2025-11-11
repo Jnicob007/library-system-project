@@ -1,5 +1,5 @@
 public interface GUIFactory {
-    Publication createPublication();
+    Publication createPublication() throws InvalidPublicationException;
     PublicationDB createPublicationDB();
 }
 
