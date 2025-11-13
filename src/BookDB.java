@@ -60,7 +60,7 @@ public class BookDB implements PublicationDB<BookObj> { // klasa BookDB rozszerz
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql)){
             if(!rs.next()){
-                System.out.println("No books to display.");
+                System.out.println("No books to return.");
             }
             else{
                 while(rs.next()){

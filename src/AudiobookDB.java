@@ -60,19 +60,24 @@ public class AudiobookDB implements PublicationDB<AudiobookObj> { // audiobookDB
         try(Connection conn = DBConnection.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
-            while(rs.next()){
-                AudiobookObj newAudiobook = new AudiobookObj(
-                        rs.getInt("audiobook_ID"),
-                        rs.getString("title"),
-                        rs.getString("genre"),
-                        rs.getDate("release_date"),
-                        rs.getInt("author_ID"),
-                        rs.getInt("publisher_ID"),
-                        rs.getInt("quantity_in_stock"),
-                        rs.getString("recording_length"),
-                        rs.getInt("available_languages_ammount")
-                );
-                audiobooks.add(newAudiobook);
+            if(!rs.next()){
+                System.out.println("No audiobooks to return");
+            }
+            else{
+                while(rs.next()){
+                    AudiobookObj newAudiobook = new AudiobookObj(
+                            rs.getInt("audiobook_ID"),
+                            rs.getString("title"),
+                            rs.getString("genre"),
+                            rs.getDate("release_date"),
+                            rs.getInt("author_ID"),
+                            rs.getInt("publisher_ID"),
+                            rs.getInt("quantity_in_stock"),
+                            rs.getString("recording_length"),
+                            rs.getInt("available_languages_ammount")
+                    );
+                    audiobooks.add(newAudiobook);
+                }
             }
         } catch (Exception e){
             System.out.println(e.getMessage());

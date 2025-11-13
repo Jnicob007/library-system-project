@@ -35,7 +35,7 @@ public class MagazineDB implements PublicationDB<MagazineObj> { // klasa Magazin
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, magazine.getTitle());
-            ps.setString(2, magazine.getTopic());
+            ps.setString(2, magazine.getTopic().toString());
             ps.setDate(3, magazine.getReleaseDate());
             ps.setInt(4, magazine.getPublisherID());
             ps.setInt(5, magazine.getQuantityInStock());
@@ -56,14 +56,14 @@ public class MagazineDB implements PublicationDB<MagazineObj> { // klasa Magazin
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
             if(!rs.next()){
-                System.out.println("No magazines to display");
+                System.out.println("No magazines to return");
             }
             else{
                 while(rs.next()){
                     MagazineObj newMagazine = new MagazineObj(
                             rs.getInt("magazine_ID"),
                             rs.getString("title"),
-                            rs.getString("topic"),
+                            MagazineObj.Topic.valueOf(rs.getString("topic")),
                             rs.getDate("release_date"),
                             rs.getInt("publisher_ID"),
                             rs.getInt("quantity_in_stock"),

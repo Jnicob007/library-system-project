@@ -59,7 +59,7 @@ public class BookObjTest {
     @Test
     void testInvalidMagazineThrowsException() {
         assertThrows(InvalidPublicationException.class, () -> {
-            new MagazineObj("", "TECHNOLOGY", Date.valueOf(LocalDate.now()), 1, 10, 5);
+            new MagazineObj("", MagazineObj.Topic.TECHNOLOGY, Date.valueOf(LocalDate.now()), 1, 10, 5);
         });
     }
 

@@ -13,18 +13,18 @@ public class MagazineObj implements Publication {
 
     private int id;
     private String title;
-    private String topic;
+    private Topic topic;
     private Date releaseDate;
     private int publisherID;
     private int quantityInStock;
     private int articlesAmmount;
 
     // Konstruktor z walidacją
-    public MagazineObj(int id, String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
+    public MagazineObj(int id, String title, Topic topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
             throws InvalidPublicationException {
         // Walidacja danych wejściowych
         InvalidPublicationException.validateString("Title", title);
-        InvalidPublicationException.validateString("Topic", topic);
+        InvalidPublicationException.validateString("Topic", topic.toString());
         InvalidPublicationException.validatePositive("Quantity in stock", quantityInStock);
         InvalidPublicationException.validatePositive("Articles amount", articlesAmmount);
 
@@ -37,13 +37,13 @@ public class MagazineObj implements Publication {
         this.articlesAmmount = articlesAmmount;
     }
 
-    public MagazineObj(String title, String topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
+    public MagazineObj(String title, Topic topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
             throws InvalidPublicationException {
         this(0, title, topic, releaseDate, publisherID, quantityInStock, articlesAmmount);
     }
 
     public MagazineObj() throws InvalidPublicationException {
-        this(0, "", "", Date.valueOf(LocalDate.now()), 0, 0, 0);
+        this(0, "", Topic.TECHNOLOGY, Date.valueOf(LocalDate.now()), 0, 0, 0);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MagazineObj implements Publication {
     // Getters
     public int getId() { return id; }
     public String getTitle() { return title; }
-    public String getTopic() { return topic; }
+    public Topic getTopic() { return topic; }
     public Date getReleaseDate() { return releaseDate; }
     public int getPublisherID() { return publisherID; }
     public int getQuantityInStock() { return quantityInStock; }

@@ -25,9 +25,10 @@ public class Main{
 
         // tutaj menu jakies ze switchem
         Scanner scanner = new Scanner(System.in);
-        List<MagazineObj> magazines = new ArrayList<>();
-        List<BookObj> books = new ArrayList<>();
-        List<AudiobookObj> audiobooks = new ArrayList<>();
+        ArrayList<MagazineObj> magazinesTempArray;
+        ArrayList<BookObj> booksTempArray;
+        ArrayList<AudiobookObj> audiobooksTempArray;
+        int publicationID, userID;
         boolean running = true;
 
         while (running) {
@@ -35,13 +36,21 @@ public class Main{
             System.out.println("1. Add Magazine");
             System.out.println("2. View All Magazines");
             System.out.println("3. Sort Magazines by Title");
-            System.out.println("4. Sort Books");
-            System.out.println("5. Add Book");
-            System.out.println("6. View All Books");
-            System.out.println("7. Add Audiobook");
-            System.out.println("8. View All Audiobooks");
-            System.out.println("9. Delete Audiobook");
-            System.out.println("10. Exit");
+            System.out.println("4. Rent a Magazine");
+            System.out.println("5. Return a Magazine to Stock");
+            System.out.println("6. Delete a Magazine");
+            System.out.println("7. Add Book");
+            System.out.println("8. View All Books");
+            System.out.println("9. Sort Books");
+            System.out.println("10. Rent a Book");
+            System.out.println("11. Return a Book to Stock");
+            System.out.println("12. Delete a Book");
+            System.out.println("13. Add Audiobook");
+            System.out.println("14. View All Audiobooks");
+            System.out.println("15. Rent an Audiobook");
+            System.out.println("16. Return an Audiobook to Stock");
+            System.out.println("17. Delete an Audiobook");
+            System.out.println("18. Exit");
             System.out.print("Choose an option: ");
 
             int choice;
@@ -61,15 +70,16 @@ public class Main{
                     System.out.println("Available topics: " + Arrays.toString(MagazineObj.Topic.values()));
                     System.out.print("Choose topic: ");
                     String topicInput = scanner.nextLine().toUpperCase();
+                    MagazineObj.Topic chosenTopic;
 
                     // Walidacja tematu
                     String topic;
                     try {
-                        MagazineObj.Topic chosenTopic = MagazineObj.Topic.valueOf(topicInput);
-                        topic = chosenTopic.name(); // zapisujemy nazwę jako String
+                        chosenTopic = MagazineObj.Topic.valueOf(topicInput);
+//                        topic = chosenTopic.name(); // zapisujemy nazwę jako String
                     } catch (IllegalArgumentException e) {
                         System.out.println("Invalid topic. Defaulting to TECHNOLOGY.");
-                        topic = MagazineObj.Topic.TECHNOLOGY.name();
+                        chosenTopic = MagazineObj.Topic.TECHNOLOGY;
                     }
 
                     // Pozostałe dane
@@ -85,37 +95,109 @@ public class Main{
                     // Tworzenie obiektu MagazineObj
                     MagazineObj magazine = null;
                     try {
-                        magazine = new MagazineObj(title, topic, Date.valueOf(LocalDate.now()), publisherID, quantity, articles);
+                        factory = new MagazineFactory();
+                        pDB = factory.createPublicationDB();
+                        p = new MagazineObj(title, chosenTopic, Date.valueOf(LocalDate.now()), publisherID, quantity, articles);
+                        pDB.addPublication(p);
                     } catch (InvalidPublicationException e) {
+                        System.out.println(e.getMessage());
                         throw new RuntimeException(e);
                     }
-                    magazines.add(magazine);
-                    System.out.println("Magazine added successfully!");
-                    break;
 
+                    break;
                 case 2:
-                    if (magazines.isEmpty()) {
-                        System.out.println("No magazines available.");
-                    } else {
-                        System.out.println("\n--- List of Magazines ---");
-                        for (MagazineObj m : magazines) {
-                            m.displayInfo();
-                            System.out.println("------------------");
-                        }
+                    factory = new MagazineFactory();
+                    pDB = factory.createPublicationDB();
+                    magazinesTempArray = pDB.getAllPublications();
+                    for(MagazineObj m : magazinesTempArray){
+                        m.displayInfo();
                     }
+//
                     break;
-
                 case 3:
-                    if (magazines.isEmpty()) {
-                        System.out.println("No magazines to sort.");
-                    } else {
-                        magazines.sort(Comparator.comparing(MagazineObj::getTitle, String.CASE_INSENSITIVE_ORDER));
-                        System.out.println("Magazines sorted by title.");
-                    }
+                    factory = new MagazineFactory();
+                    pDB = factory.createPublicationDB();
+                    magazinesTempArray = pDB.getAllPublications();
+                    magazinesTempArray.sort(Comparator.comparing(MagazineObj::getTitle, String.CASE_INSENSITIVE_ORDER));
+//                    if (magazines.isEmpty()) {
+//                        System.out.println("No magazines to sort.");
+//                    } else {
+//                        magazines.sort(Comparator.comparing(MagazineObj::getTitle, String.CASE_INSENSITIVE_ORDER));
+//                        System.out.println("Magazines sorted by title.");
+//                    }
                     break;
-
                 case 4:
-                    if (books.isEmpty()) {
+                    factory = new MagazineFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Magazine ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.rentPublication(publicationID, userID);
+
+                    break;
+                case 5:
+                    factory = new MagazineFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Magazine ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.returnPublication(publicationID, userID);
+
+                    break;
+                case 6:
+                    factory = new MagazineFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Magazine ID: ");
+                    publicationID = scanner.nextInt();
+                    pDB.deletePublication(publicationID);
+
+                    break;
+                case 7:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.print("Enter book title: ");
+                    String bookTitle = scanner.nextLine();
+                    System.out.println("Enter genre: ");
+                    String bookGenre = scanner.nextLine();
+                    System.out.print("Enter release date (yyyy-mm-dd): ");
+                    Date bookReleaseDate = Date.valueOf(scanner.nextLine());
+                    System.out.print("Enter author ID: ");
+                    int bookAuthorID = scanner.nextInt();
+                    System.out.println("Enter publisher ID: ");
+                    int bookPublisherID = scanner.nextInt();
+                    System.out.println("Enter quantity in stock: ");
+                    int bookQuantityInStock = scanner.nextInt();
+                    System.out.println("Enter language: ");
+                    String bookLanguage = scanner.nextLine();
+                    System.out.print("Enter number of pages: ");
+                    int bookPagesAmmount = Integer.parseInt(scanner.nextLine());
+
+                    p = new BookObj(bookTitle, bookGenre, bookReleaseDate, bookAuthorID, bookPublisherID, bookQuantityInStock, bookLanguage, bookPagesAmmount);
+                    pDB.addPublication(p);
+                    System.out.println("Book added successfully!");
+
+                    break;
+                case 8:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+                    booksTempArray = pDB.getAllPublications();
+                    for(BookObj b : booksTempArray){
+                        b.displayInfo();
+                    }
+//
+                    break;
+                case 9:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+                    booksTempArray = pDB.getAllPublications();
+
+                    if (booksTempArray.isEmpty()) {
                         System.out.println("No books to sort.");
                     } else {
                         System.out.println("Choose sorting method:");
@@ -126,108 +208,190 @@ public class Main{
 
                         switch (choice1) {
                             case 1:
-                                books.sort(new BookObj.TitleComparator());
+                                booksTempArray.sort(new BookObj.TitleComparator());
                                 System.out.println("Books sorted by title.");
                                 break;
                             case 2:
-                                books.sort(new BookObj.ReleaseDateComparator());
+                                booksTempArray.sort(new BookObj.ReleaseDateComparator());
                                 System.out.println("Books sorted by release date.");
                                 break;
                             case 3:
-                                books.sort(new BookObj.PagesAmountComparator());
+                                booksTempArray.sort(new BookObj.PagesAmountComparator());
                                 System.out.println("Books sorted by number of pages.");
                                 break;
                             default:
                                 System.out.println("Invalid choice.");
                         }
 
-                        for (BookObj b : books) {
+                        for (BookObj b : booksTempArray) {
                             b.displayInfo();
                         }
                     }
                     break;
-
-                case 5: // Dodawanie książki
-                    System.out.print("Enter book title: ");
-                    String bookTitle = scanner.nextLine();
-
-                    System.out.print("Enter author: ");
-                    String author = scanner.nextLine();
-
-                    System.out.print("Enter number of pages: ");
-                    int pages = Integer.parseInt(scanner.nextLine());
-
-                    System.out.print("Enter release date (yyyy-mm-dd): ");
-                    Date releaseDate = Date.valueOf(scanner.nextLine());
-
-                    BookObj book = null;
-                    book = new BookObj(bookTitle, author, pages, releaseDate);
-                    books.add(book);
-                    System.out.println("Book added successfully!");
-                    break;
-
-                case 6: // Wyświetlanie książek
-                    if (books.isEmpty()) {
-                        System.out.println("No books available.");
-                    } else {
-                        System.out.println("\n--- List of Books ---");
-                        for (BookObj b : books) {
-                            b.displayInfo();
-                            System.out.println("------------------");
-                        }
-                    }
-                    break;
-
-                case 7: // Dodawanie audiobooka
-                    System.out.print("Enter audiobook title: ");
-                    String audioTitle = scanner.nextLine();
-
-                    System.out.print("Enter author: ");
-                    String audioAuthor = scanner.nextLine();
-
-                    System.out.print("Enter duration in minutes: ");
-                    int duration = Integer.parseInt(scanner.nextLine());
-
-                    AudiobookObj audiobook = null;
-                    audiobook = new AudiobookObj(audioTitle, audioAuthor, duration);
-                    audiobooks.add(audiobook);
-                    System.out.println("Audiobook added successfully!");
-                    break;
-
-                case 8: // Wyświetlanie audiobooków
-                    if (audiobooks.isEmpty()) {
-                        System.out.println("No audiobooks available.");
-                    } else {
-                        System.out.println("\n--- List of Audiobooks ---");
-                        for (AudiobookObj a : audiobooks) {
-                            a.displayInfo();
-                            System.out.println("------------------");
-                        }
-                    }
-                    break;
-
-                case 9: // Usuwanie audiobooka
-                    if (audiobooks.isEmpty()) {
-                        System.out.println("No audiobooks to delete.");
-                    } else {
-                        System.out.print("Enter the index of audiobook to delete (starting from 1): ");
-                        int index = Integer.parseInt(scanner.nextLine()) - 1;
-                        if (index >= 0 && index < audiobooks.size()) {
-                            audiobooks.remove(index);
-                            System.out.println("Audiobook deleted successfully!");
-                        } else {
-                            System.out.println("Invalid index.");
-                        }
-                    }
-                    break;
-
                 case 10:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Book ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.rentPublication(publicationID, userID);
+
+                    break;
+                case 11:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Book ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.returnPublication(publicationID, userID);
+
+                    break;
+                case 12:
+                    factory = new BookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Book ID: ");
+                    publicationID = scanner.nextInt();
+                    pDB.deletePublication(publicationID);
+
+                    break;
+                case 13:
+                    factory = new AudiobookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.print("Enter audiobook title: ");
+                    String audiobookTitle = scanner.nextLine();
+                    System.out.println("Enter genre: ");
+                    String audiobookGenre = scanner.nextLine();
+                    System.out.print("Enter release date (yyyy-mm-dd): ");
+                    Date audiobookReleaseDate = Date.valueOf(scanner.nextLine());
+                    System.out.print("Enter author ID: ");
+                    int audiobookAuthorID = scanner.nextInt();
+                    System.out.println("Enter publisher ID: ");
+                    int audiobookPublisherID = scanner.nextInt();
+                    System.out.println("Enter quantity in stock: ");
+                    int audiobookQuantityInStock = scanner.nextInt();
+                    System.out.println("Enter recording length (00:00:00): ");
+                    String audiobookRecordingLength = scanner.nextLine();
+                    System.out.print("Enter ammount of available languages: ");
+                    int audiobookAvailableLanguagesAmmount = Integer.parseInt(scanner.nextLine());
+
+                    p = new AudiobookObj(audiobookTitle, audiobookGenre, audiobookReleaseDate, audiobookAuthorID, audiobookPublisherID, audiobookQuantityInStock, audiobookRecordingLength, audiobookAvailableLanguagesAmmount);
+                    pDB.addPublication(p);
+                    System.out.println("Audiobook added successfully!");
+
+                    break;
+                case 14:
+                    factory = new AudiobookFactory();
+                    pDB = factory.createPublicationDB();
+                    audiobooksTempArray = pDB.getAllPublications();
+                    for(AudiobookObj a : audiobooksTempArray){
+                        a.displayInfo();
+                    }
+//
+                    break;
+                case 15:
+                    factory = new AudiobookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Audiobook ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.rentPublication(publicationID, userID);
+
+                    break;
+                case 16:
+                    factory = new AudiobookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Audiobook ID: ");
+                    publicationID = scanner.nextInt();
+                    System.out.println("Enter User ID: ");
+                    userID = scanner.nextInt();
+                    pDB.returnPublication(publicationID, userID);
+
+                    break;
+                case 17:
+                    factory = new AudiobookFactory();
+                    pDB = factory.createPublicationDB();
+
+                    System.out.println("Enter Audiobook ID: ");
+                    publicationID = scanner.nextInt();
+                    pDB.deletePublication(publicationID);
+
+                    break;
+                case 18:
                     System.out.println("Exiting program...");
                     running = false;
                     break;
 
                 default:
                     System.out.println("Invalid choice. Please try again.");
+//                case 4:
+//
+//
+//                case 5: // Dodawanie książki
+//
+//                case 6: // Wyświetlanie książek
+//                    if (books.isEmpty()) {
+//                        System.out.println("No books available.");
+//                    } else {
+//                        System.out.println("\n--- List of Books ---");
+//                        for (BookObj b : books) {
+//                            b.displayInfo();
+//                            System.out.println("------------------");
+//                        }
+//                    }
+//                    break;
+//
+//                case 7: // Dodawanie audiobooka
+//                    System.out.print("Enter audiobook title: ");
+//                    String audioTitle = scanner.nextLine();
+//
+//                    System.out.print("Enter author: ");
+//                    String audioAuthor = scanner.nextLine();
+//
+//                    System.out.print("Enter duration in minutes: ");
+//                    int duration = Integer.parseInt(scanner.nextLine());
+//
+//                    AudiobookObj audiobook = null;
+//                    audiobook = new AudiobookObj(audioTitle, audioAuthor, duration);
+//                    audiobooks.add(audiobook);
+//                    System.out.println("Audiobook added successfully!");
+//                    break;
+//
+//                case 8: // Wyświetlanie audiobooków
+//                    if (audiobooks.isEmpty()) {
+//                        System.out.println("No audiobooks available.");
+//                    } else {
+//                        System.out.println("\n--- List of Audiobooks ---");
+//                        for (AudiobookObj a : audiobooks) {
+//                            a.displayInfo();
+//                            System.out.println("------------------");
+//                        }
+//                    }
+//                    break;
+//
+//                case 9: // Usuwanie audiobooka
+//                    if (audiobooks.isEmpty()) {
+//                        System.out.println("No audiobooks to delete.");
+//                    } else {
+//                        System.out.print("Enter the index of audiobook to delete (starting from 1): ");
+//                        int index = Integer.parseInt(scanner.nextLine()) - 1;
+////                        if (index >= 0 && index < audiobooks.size()) {
+////                            audiobooks.remove(index);
+////                            System.out.println("Audiobook deleted successfully!");
+////                        } else {
+////                            System.out.println("Invalid index.");
+////                        }
+//
+//                    }
+////                    break;
             }
         }
         scanner.close();
