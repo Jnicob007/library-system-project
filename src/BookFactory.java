@@ -1,7 +1,7 @@
 public class BookFactory implements GUIFactory { // klasa BookFactory implementująca interfejs do fabryk
     @Override
-    public Publication createPublication() { // metoda zwracająca nowy obiekt książki
-        return new BookObj(bookTitle, author, pages, releaseDate);
+    public Publication createPublication() throws InvalidPublicationException { // metoda zwracająca nowy obiekt książki
+        return new BookObj();
     }
 
     @Override

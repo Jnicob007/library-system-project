@@ -177,9 +177,13 @@ public class Main{
                     System.out.print("Enter number of pages: ");
                     int bookPagesAmmount = Integer.parseInt(scanner.nextLine());
 
-                    p = new BookObj(bookTitle, bookGenre, bookReleaseDate, bookAuthorID, bookPublisherID, bookQuantityInStock, bookLanguage, bookPagesAmmount);
-                    pDB.addPublication(p);
-                    System.out.println("Book added successfully!");
+                    try{
+                        p = new BookObj(bookTitle, bookGenre, bookReleaseDate, bookAuthorID, bookPublisherID, bookQuantityInStock, bookLanguage, bookPagesAmmount);
+                        pDB.addPublication(p);
+                        System.out.println("Book added successfully!");
+                    }catch(InvalidPublicationException e){
+                        System.out.println(e.getMessage());
+                    }
 
                     break;
                 case 8:

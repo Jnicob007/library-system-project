@@ -12,7 +12,17 @@ public class AudiobookObj implements Publication { // audiobook rozszerzające i
     private String recordingLength;
     private int availableLanguagesAmmount;
 
-    public AudiobookObj(int id, String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String recordingLength, int availableLanguagesAmmount) {
+    public AudiobookObj(int id, String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String recordingLength, int availableLanguagesAmmount) throws InvalidPublicationException{
+        InvalidPublicationException.validatePositive("ID", id);
+        InvalidPublicationException.validateString("title", title);
+        InvalidPublicationException.validateString("genre", genre);
+        InvalidPublicationException.validateString("release date", releaseDate.toString());
+        InvalidPublicationException.validatePositive("author ID", authorID);
+        InvalidPublicationException.validatePositive("publisher ID", publisherID);
+        InvalidPublicationException.validatePositive("quantity in stock", quantityInStock);
+        InvalidPublicationException.validateString("language", recordingLength);
+        InvalidPublicationException.validatePositive("pages ammount", availableLanguagesAmmount);
+
         this.id = id;
         this.title = title;
         this.genre = genre;
@@ -24,15 +34,12 @@ public class AudiobookObj implements Publication { // audiobook rozszerzające i
         this.availableLanguagesAmmount = availableLanguagesAmmount;
     }
 
-    public AudiobookObj(String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String recordingLength, int availableLanguagesAmmount) {
+    public AudiobookObj(String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String recordingLength, int availableLanguagesAmmount) throws InvalidPublicationException{
         this(0, title, genre, releaseDate, authorID, publisherID, quantityInStock, recordingLength, availableLanguagesAmmount);
     }
 
-    public AudiobookObj(){
+    public AudiobookObj() throws InvalidPublicationException{
         this(0, "", "", Date.valueOf(LocalDate.now()), 0, 0, 0, "00:00:00", 0);
-    }
-
-    public AudiobookObj(String audioTitle, String audioAuthor, int duration) {
     }
 
     @Override

@@ -15,7 +15,18 @@ public class BookObj implements Publication {
     private String language;
     private int pagesAmmount;
 
-    public BookObj(int id, String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) {
+    public BookObj(int id, String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) throws InvalidPublicationException{
+        // Walidacja danych wejściowych
+        InvalidPublicationException.validatePositive("ID", id);
+        InvalidPublicationException.validateString("title", title);
+        InvalidPublicationException.validateString("genre", genre);
+        InvalidPublicationException.validateString("release date", releaseDate.toString());
+        InvalidPublicationException.validatePositive("author ID", authorID);
+        InvalidPublicationException.validatePositive("publisher ID", publisherID);
+        InvalidPublicationException.validatePositive("quantity in stock", quantityInStock);
+        InvalidPublicationException.validateString("language", language);
+        InvalidPublicationException.validatePositive("pages ammount", pagesAmmount);
+
         this.id = id;
         this.title = title;
         this.genre = genre;
@@ -27,11 +38,11 @@ public class BookObj implements Publication {
         this.pagesAmmount = pagesAmmount;
     }
 
-    public BookObj(String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) {
+    public BookObj(String title, String genre, Date releaseDate, int authorID, int publisherID, int quantityInStock, String language, int pagesAmmount) throws InvalidPublicationException{
         this(0, title, genre, releaseDate, authorID, publisherID, quantityInStock, language, pagesAmmount);
     }
 
-    public BookObj(String bookTitle, String author, int pages, Date releaseDate){
+    public BookObj() throws InvalidPublicationException{
         this(0,"","", Date.valueOf(LocalDate.now()),0,0,0, "", 0);
     }
 

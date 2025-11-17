@@ -23,10 +23,13 @@ public class MagazineObj implements Publication {
     public MagazineObj(int id, String title, Topic topic, Date releaseDate, int publisherID, int quantityInStock, int articlesAmmount)
             throws InvalidPublicationException {
         // Walidacja danych wejściowych
-        InvalidPublicationException.validateString("Title", title);
-        InvalidPublicationException.validateString("Topic", topic.toString());
-        InvalidPublicationException.validatePositive("Quantity in stock", quantityInStock);
-        InvalidPublicationException.validatePositive("Articles amount", articlesAmmount);
+        InvalidPublicationException.validatePositive("ID", id);
+        InvalidPublicationException.validateString("title", title);
+        InvalidPublicationException.validateString("topic", topic.toString());
+        InvalidPublicationException.validateString("release date", releaseDate.toString());
+        InvalidPublicationException.validatePositive("publisher ID", publisherID);
+        InvalidPublicationException.validatePositive("quantity in stock", quantityInStock);
+        InvalidPublicationException.validatePositive("articles ammount", articlesAmmount);
 
         this.id = id;
         this.title = title;

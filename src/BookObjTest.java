@@ -15,7 +15,7 @@ public class BookObjTest {
     private List<BookObj> books;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InvalidPublicationException{
         books = new ArrayList<>();
         books.add(new BookObj(1, "Zebra Tales", "Adventure", Date.valueOf(LocalDate.of(2010, 5, 20)), 1, 1, 10, "English", 200));
         books.add(new BookObj(2, "Alpha Code", "Sci-Fi", Date.valueOf(LocalDate.of(2020, 1, 10)), 2, 1, 5, "English", 350));
@@ -24,7 +24,7 @@ public class BookObjTest {
 
     //Test tworzenia obiektu
     @Test
-    void testBookCreation() {
+    void testBookCreation() throws InvalidPublicationException {
         BookObj book = new BookObj("Test Book", "Fantasy", Date.valueOf(LocalDate.now()), 1, 1, 5, "English", 300);
         assertEquals("Test Book", book.getTitle());
         assertEquals("Fantasy", book.getGenre());
@@ -65,7 +65,7 @@ public class BookObjTest {
 
     //Test CRUD – dodanie i usunięcie książki
     @Test
-    void testAddAndRemoveBook() {
+    void testAddAndRemoveBook() throws InvalidPublicationException{
         BookObj book = new BookObj("Temp Book", "Drama", Date.valueOf(LocalDate.now()), 1, 1, 2, "English", 250);
         books.add(book);
         assertEquals(4, books.size());
