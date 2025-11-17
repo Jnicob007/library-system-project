@@ -12,7 +12,7 @@ public class AudiobookObjTest {
     private List<AudiobookObj> audiobooks;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InvalidPublicationException{
         audiobooks = new ArrayList<>();
         audiobooks.add(new AudiobookObj(1, "The Time Machine", "Science Fiction", Date.valueOf(LocalDate.of(2018, 5, 15)), 1, 1, 10, "06:30:00", 3));
         audiobooks.add(new AudiobookObj(2, "The Hobbit", "Fantasy", Date.valueOf(LocalDate.of(2020, 12, 10)), 2, 1, 5, "10:15:00", 5));
@@ -21,7 +21,7 @@ public class AudiobookObjTest {
 
     //Test poprawnego tworzenia obiektu
     @Test
-    void testAudiobookCreation() {
+    void testAudiobookCreation() throws InvalidPublicationException {
         AudiobookObj ab = new AudiobookObj("Dune", "Science Fiction", Date.valueOf(LocalDate.of(2021, 6, 1)), 1, 2, 8, "09:30:00", 4);
         assertEquals("Dune", ab.getTitle());
         assertEquals("Science Fiction", ab.getGenre());
@@ -37,7 +37,7 @@ public class AudiobookObjTest {
 
     //Test CRUD — dodanie i usunięcie audiobooka z listy
     @Test
-    void testAddAndRemoveAudiobook() {
+    void testAddAndRemoveAudiobook() throws InvalidPublicationException{
         AudiobookObj newAb = new AudiobookObj("Brave New World", "Dystopian", Date.valueOf(LocalDate.now()), 4, 3, 6, "08:00:00", 2);
         audiobooks.add(newAb);
         assertEquals(4, audiobooks.size());
@@ -47,7 +47,7 @@ public class AudiobookObjTest {
 
     //Test aktualizacji (update)
     @Test
-    void testUpdateAudiobookQuantity() {
+    void testUpdateAudiobookQuantity() throws InvalidPublicationException{
         AudiobookObj ab = audiobooks.get(1);
         int oldQty = ab.getQuantityInStock();
         int newQty = oldQty + 5;

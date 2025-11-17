@@ -183,6 +183,7 @@ public class Main{
                         System.out.println("Book added successfully!");
                     }catch(InvalidPublicationException e){
                         System.out.println(e.getMessage());
+                        throw new RuntimeException(e);
                     }
 
                     break;
@@ -283,9 +284,14 @@ public class Main{
                     System.out.print("Enter ammount of available languages: ");
                     int audiobookAvailableLanguagesAmmount = Integer.parseInt(scanner.nextLine());
 
-                    p = new AudiobookObj(audiobookTitle, audiobookGenre, audiobookReleaseDate, audiobookAuthorID, audiobookPublisherID, audiobookQuantityInStock, audiobookRecordingLength, audiobookAvailableLanguagesAmmount);
-                    pDB.addPublication(p);
-                    System.out.println("Audiobook added successfully!");
+                    try{
+                        p = new AudiobookObj(audiobookTitle, audiobookGenre, audiobookReleaseDate, audiobookAuthorID, audiobookPublisherID, audiobookQuantityInStock, audiobookRecordingLength, audiobookAvailableLanguagesAmmount);
+                        pDB.addPublication(p);
+                        System.out.println("Audiobook added successfully!");
+                    }catch(InvalidPublicationException e){
+                        System.out.println(e.getMessage());
+                        throw new RuntimeException(e);
+                    }
 
                     break;
                 case 14:
