@@ -93,7 +93,6 @@ public class Main{
                     int articles = Integer.parseInt(scanner.nextLine());
 
                     // Tworzenie obiektu MagazineObj
-                    MagazineObj magazine = null;
                     try {
                         factory = new MagazineFactory();
                         pDB = factory.createPublicationDB();
